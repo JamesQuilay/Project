@@ -1,0 +1,134 @@
+{% extends "base.html" %} 
+{% block title %} {{ watch.model_name }} {% endblock %} 
+{% block content %}
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+    <div class="container">
+  
+      <ul class="nav nav-tabs justify-content-center" style="justify-content: center;">
+        {% if current_user.is_authenticated %}
+          <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="/profile">Account: {{ current_user.first_name + " " + current_user.last_name }}</a>
+          </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="/login">Account: Guest</a>
+        </li>
+        {% endif %}
+      </ul>
+  
+      {% if current_user.is_authenticated %}
+          <a href="/cart" class="btn btn-success">
+              <img src="../static/images/cart-fill.svg" alt="Icon" style="width: 16px; height: 16px; filter: invert(1);"> {{ cart_count }} Items In Your Cart
+          </a>
+      {% else %}
+          <a href="/login" class="btn btn-success">
+              <img src="../static/images/cart-fill.svg" alt="Icon" style="width: 16px; height: 16px; filter: invert(1);"> {{ cart_count }} Items In Your Cart
+          </a>
+      {% endif %}
+      
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <div class="mb-3">
+        <a href="/" class="btn btn-info btn-outline btn-sm">Go Back</a>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- Product Image Gallery -->
+        <div class="col-lg-6">
+            <div class="product-image">
+                {% if watch.image %}
+                    <img src="{{ url_for('views.product_image', product_id=watch.id) }}" alt="{{ watch.model_name }}" class="img-fluid">
+                {% else %}
+                    <p>No Image</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Product Information -->
+        <div class="col-lg-6">
+            <div class="p-4 bg-light rounded shadow-sm">
+                <h1 class="h3">{{ watch.model_name }}</h1>
+                <p class="text-muted mb-3">${{ watch.price }}</p>
+                <p>{{ watch.description }}</p>
+                <div class="d-flex justify-content-between mb-3">
+                    <button class="btn btn-primary btn-sm mb-2 add-to-cart-btn" 
+                    {% if current_user.is_authenticated %}
+                            data-watch-id="{{ watch.id }}"
+                            onclick="addToCart(this)">Add to Cart</button>
+                    {% else %}
+                        <button class="btn btn-primary btn-sm mb-2" 
+                            onclick="redirectToLogin()">Add to Cart</button>
+                    {% endif %}
+                        <a href="#" class="btn btn-secondary">Add to Wishlist</a>
+                </div>
+                <a href="{{ url_for('views.checkout') }}" class="btn btn-success">Buy Now</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function addToCart(button) {
+        var watchId = button.getAttribute('data-watch-id');
+        
+        // Show the loading spinner
+        document.getElementById('loading-spinner').style.display = 'flex';
+  
+        fetch('/add_to_cart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ watch_id: watchId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Hide the loading spinner
+            document.getElementById('loading-spinner').style.display = 'none';
+            
+            if (data.error) {
+                alert(data.error);
+            } else {
+                // Update the cart count on the page
+                updateCartCount(data.cart_count);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Hide the loading spinner in case of an error
+            document.getElementById('loading-spinner').style.display = 'none';
+        });
+    }
+  
+    function updateCartCount(count) {
+        var cartButton = document.querySelector('.btn-success');
+        if (cartButton) {
+            cartButton.innerHTML = `
+                <img src="../static/images/cart-fill.svg" alt="Icon" style="width: 16px; height: 16px; filter: invert(1);">
+                ${count} Items In Your Cart
+            `;
+        }
+    }
+  
+    // Update cart count on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('/cart_count')
+            .then(response => response.json())
+            .then(data => updateCartCount(data.cart_count))
+            .catch(error => console.error('Error:', error));
+    });
+</script>
+
+<script>
+    function redirectToLogin() {
+        window.location.href = '/login';
+    }
+</script>
+  
+{% endblock %}

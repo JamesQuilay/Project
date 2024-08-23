@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %} Order Confirmation {% endblock %}
+{% block content %}
+
+<div class="container-xl px-4 mt-4">
+    <!-- Order Confirmation Card -->
+    <div class="card mb-4">
+        <div class="card-header">Order Confirmation</div>
+        <div class="card-body">
+            <h5 class="card-title">Thank you for your order, {{ order.user.first_name }}!</h5>
+            <p class="card-text">Your order has been successfully placed. Below are the details of your order:</p>
+            
+            <!-- Order Details -->
+            <div class="mb-3">
+                <h6 class="text-muted">Order ID:</h6>
+                <p class="fw-bold">{{ order.id }}</p>
+            </div>
+            <div class="mb-3">
+                <h6 class="text-muted">Order Date:</h6>
+                <p class="fw-bold">{{ order.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+            </div>
+            <div class="mb-3">
+                <h6 class="text-muted">Order Status:</h6>
+                <p class="fw-bold text-success">{{ order.status }}</p>
+            </div>
+
+            <!-- Product List -->
+            <div class="mb-3">
+                <h6 class="text-muted">Order Items:</h6>
+                <div class="list-group">
+                    {% for item in order.order_items %}
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            {% if item.watch.image %}
+                            <img src="{{ url_for('views.product_image', product_id=item.watch.id) }}" alt="{{ item.watch.model_name }}" class="img-thumbnail" style="width: 80px; height: auto;">
+                            {% else %}
+                            <p>No Image</p>
+                            {% endif %}
+                            <div class="ms-3">
+                                <h6 class="mb-1">{{ item.watch.model_name }}</h6>
+                                <p class="mb-1">Quantity: {{ item.quantity }}</p>
+                                <p class="mb-0">Price: ${{ item.price_at_order }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Total Price -->
+            <div class="mb-3">
+                <h6 class="text-muted">Total Price:</h6>
+                <p class="fw-bold">$ {{ order.total_price }}</p>
+            </div>
+            
+            <!-- Back to Home Button -->
+            <a href="{{ url_for('views.home') }}" class="btn btn-primary">Back to Home</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
