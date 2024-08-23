@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block title %} User Profile {% endblock %}
+{% block content %}
+
+
+<div class="container-xl px-4 mt-4">
+    <!-- Sidebar -->
+    <div class="row">
+        <div class="col-xl-3">
+            <div class="card mb-4">
+                <div class="card-header">User Menu</div>
+                <div class="list-group list-group-flush">
+                    <a class="list-group-item list-group-item-action {% if current_route == 'user_profile' %}active{% endif %}" href="{{ url_for('views.user_profile') }}">User Profile</a>
+                    <a class="list-group-item list-group-item-action {% if current_route == 'change_password' %}active{% endif %}" href="{{ url_for('views.change_password') }}">Change Password</a>
+                    <a class="list-group-item list-group-item-action" href="{{ url_for('auth.logout') }}">Logout</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-9">
+            {% if current_route == 'user_profile' %}
+            <!-- Account details card-->
+            <div class="card mb-4">
+                <div class="card-header">Account Details</div>
+                    <div class="card-body">
+                        <form method="POST" id="update-form" action="{{ url_for('views.user_profile') }}">
+                            
+                            
+                            <!-- Form Row-->
+                            <div class="row gx-3 mb-3">
+                                <!-- Form Group (first name)-->
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="inputFirstName">First name</label>
+                                    <input class="form-control" id="inputFirstName" name="first_name" type="text" value="{{ user.first_name }}" placeholder="Enter your first name">
+                                </div>
+                                <!-- Form Group (last name)-->
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="inputLastName">Last name</label>
+                                    <input class="form-control" id="inputLastName" name="last_name" type="text" value="{{ user.last_name }}" placeholder="Enter your last name">
+                                </div>
+                            </div>
+                            
+                            
+                                <!-- Form Group (address line 1)-->
+                            
+                            <div class="row gx-3 mb-2">
+
+                                <label class="small mb-1" for="address">Address Line</label>
+                                <input class="form-control" id="address" name="address" type="text" value="{{ user.addresses[0].address_line if user.addresses else '' }}" placeholder="Enter your address">
+                            </div>
+                            
+                            
+                            <!-- Form Row -->
+                            <div class="row gx-3 mb-3">
+                                <!-- Form Group (city)-->
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="inputCity">City</label>
+                                    <input class="form-control" id="inputCity" name="city" type="text" value="{{ user.addresses[0].city if user.addresses else '' }}" placeholder="Enter your city">
+                                </div>
+                                <!-- Form Group (state)-->
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="inputState">State</label>
+                                    <input class="form-control" id="inputState" name="state" type="text" value="{{ user.addresses[0].state if user.addresses else '' }}" placeholder="Enter your state">
+                                </div>
+                            </div>
+                            <!-- Form Group (country)-->
+                            <div class="mb-3">
+                                <label class="small mb-1" for="inputCountry">Country</label>
+                                <input class="form-control" id="inputCountry" name="country" type="text" value="{{ user.addresses[0].country if user.addresses else '' }}" placeholder="Enter your country">
+                            </div>
+                            <div class="mb-3">
+                                <label class="small mb-1" for="inputPostalCode">Postal Code</label>
+                                <input class="form-control" id="inputPostalCode" name="postal_code" type="text" value="{{ user.addresses[0].postal_code if user.addresses else '' }}" placeholder="Enter your postal code">
+                            </div>
+                            <!-- Form Group (email address)-->
+                            <div class="mb-3">
+                                <label class="small mb-1" for="inputEmailAddress">Email address</label>
+                                <input class="form-control" id="inputEmailAddress" name="email" type="email" value="{{ user.email }}" placeholder="Enter your email address">
+                            </div>
+                            <!-- Save changes button-->
+                            <button class="btn btn-primary" type="submit">Save changes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% elif current_route == 'change_password' %}
+            <!-- Change Password Card -->
+            <div class="card mb-4">
+                <div class="card-header">Change Password</div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('views.change_password') }}" id="password-form">
+                        <!-- Form Group (old password)-->
+                        <div class="mb-3">
+                            <label class="small mb-1" for="inputOldPassword">Old Password</label>
+                            <input class="form-control" id="inputOldPassword" name="old_password" type="password" placeholder="Enter your old password" required>
+                        </div>
+                        <!-- Form Group (new password)-->
+                        <div class="mb-3">
+                            <label class="small mb-1" for="inputNewPassword">New Password</label>
+                            <input class="form-control" id="inputNewPassword" name="new_password" type="password" placeholder="Enter your new password" required>
+                        </div>
+                        <!-- Form Group (confirm new password)-->
+                        <div class="mb-3">
+                            <label class="small mb-1" for="inputConfirmPassword">Confirm New Password</label>
+                            <input class="form-control" id="inputConfirmPassword" name="confirm_password" type="password" placeholder="Confirm your new password" required>
+                        </div>
+                        <!-- Save changes button-->
+                        <button class="btn btn-primary" type="submit">Change Password</button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+{% endblock %} 

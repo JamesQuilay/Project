@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block title %} Checkout {% endblock %}
+{% block content %}
+
+<div class="container mt-5">
+    <div class="mb-3">
+        <a href="/" class="btn btn-info btn-outline btn-sm">Continue Shopping</a>
+    </div>
+    <div class="row">
+        <!-- Product Information Section -->
+        <div class="col-lg-7 p-0 pe-lg-4">
+            <div class="bg-light p-4 rounded shadow-sm">
+                <!-- Loop through the user's cart items -->
+                {% for item in cart_items %}
+                <div class="d-flex align-items-center mb-4">
+                    <!-- Product Image -->
+                    {% if item.watch.image %}
+                        <img src="{{ url_for('views.product_image', product_id=item.watch.id) }}" alt="{{ item.watch.model_name }}" class="img-thumbnail" style="width: 100px; height: auto;">
+                    {% else %}
+                        <img src="../static/images/default.jpg" alt="Default Image" class="img-thumbnail" style="width: 100px; height: auto;">
+                    {% endif %}
+                    <div class="ms-3 flex-grow-1">
+                        <h2 class="h5 font-weight-bold mb-3">{{ item.watch.model_name }} ({{ item.quantity }})</h2>
+                        <div class="d-flex justify-content-between mb-2">
+                            <p class="text-muted">Price</p>
+                            <p class="h5">${{ item.watch.price }}</p>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <p class="text-muted">Total</p>
+                            <p class="h5">${{ item.quantity * item.watch.price }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                <!-- Total Amount to Pay -->
+                <div class="d-flex justify-content-between mt-4">
+                    <h4 class="font-weight-bold">Total Amount to Pay</h4>
+                    <h4 class="text-success">${{ total_amount_to_pay }}</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Details Section -->
+        <div class="col-lg-5 p-0 ps-lg-4">
+            <div class="bg-light p-4 rounded shadow-sm">
+                <h5 class="fw-bold">Payment Details</h5>
+                <form action="{{ url_for('views.checkout') }}" method="POST">
+                    <div class="mb-3">
+                        <label for="emailAddress" class="form-label text-muted">Email Address</label>
+                        <input type="email" id="emailAddress" name="emailAddress" class="form-control" placeholder="example@domain.com" value="{{ current_user.email }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="buyerInfo" class="form-label text-muted">Buyer's Information</label>
+                        <input type="text" id="buyerInfo" name="buyerInfo" class="form-control" placeholder="Your Name" value="{{ current_user.first_name + " " + current_user.last_name }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="address_line" class="form-label text-muted">Address Line</label>
+                        <input type="text" id="address_line" name="address_line" class="form-control" placeholder="123 Main St" value="{{ address_values.address_line }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="city" class="form-label text-muted">City</label>
+                        <input type="text" id="city" name="city" class="form-control" placeholder="City" value="{{ address_values.city }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="state" class="form-label text-muted">State</label>
+                        <input type="text" id="state" name="state" class="form-control" placeholder="State" value="{{ address_values.state }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="postal_code" class="form-label text-muted">Postal Code</label>
+                        <input type="text" id="postal_code" name="postal_code" class="form-control" placeholder="Postal Code" value="{{ address_values.postal_code }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="country" class="form-label text-muted">Country</label>
+                        <input type="text" id="country" name="country" class="form-control" placeholder="Country" value="{{ address_values.country }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="paymentMethod" class="form-label text-muted">Payment Method</label>
+                        <input type="text" id="paymentMethod" name="paymentMethod" class="form-control" value="Offline Payment" disabled>
+                    </div>
+                    <button class="btn btn-primary btn-lg w-100">Purchase</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Custom styling to enhance the look */
+
+    .img-thumbnail {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+    .bg-light {
+        background-color: #f8f9fa !important;
+        border-radius: 15px;
+        padding: 30px;
+    }
+
+    .shadow-sm {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .h5, .h4 {
+        font-weight: 600;
+    }
+
+    .text-muted {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+
+    button.btn-primary {
+        background-color: #007bff;
+        border: none;
+        border-radius: 10px;
+        padding: 12px;
+    }
+</style>
+
+{% endblock %}

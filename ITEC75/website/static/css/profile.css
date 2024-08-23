@@ -1,0 +1,63 @@
+body {
+    background-color: #f8f9fc;
+    font-family: Arial, sans-serif;
+    background-image: url('img/hero-bg.jpg');
+}
+
+.nav-link.active {
+    color: black !important;
+    font-weight: bold;
+}
+
+.card-header {
+    background-color: #f8f9fc;
+    border-bottom: 1px solid #e3e6f0;
+    font-weight: bold;
+}
+
+.card-body {
+    background-color: #ffffff;
+}
+
+.img-account-profile {
+    height: 200px;
+    width: 200px;
+    object-fit: cover;
+}
+
+.btn-primary {
+    background-color: #4e73df;
+    border-color: #4e73df;
+}
+
+.btn-primary:hover {
+    background-color: #4e73df;
+    border-color: #4e73df;
+}
+
+.form-control {
+    font-size: 0.85rem;
+}
+
+input[type="text"], input[type="email"], input[type="tel"] {
+    background-color: #e2e8f0;
+    border-radius: 5px;
+    border: 1px solid #d1d3e2;
+}
+
+input::placeholder {
+    color: #6c757d;
+    opacity: 0.75;
+}
+
+input:focus {
+    border-color: #4e73df;
+    box-shadow: none;
+}
+
+@media (max-width: 767.98px) {
+    .col-xl-4, .col-xl-8 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}

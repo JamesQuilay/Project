@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/css/mdb5.css">
+    <link rel="stylesheet" href="../static/css/roboto.css">
+    <link rel="stylesheet" href="../static/css/style.css">
+    
+    <!-- Page Title -->
+    <title><?= $title ?? 'ChronoLuxe' ?></title>
+    <link rel="shortcut icon" href="../static/images/brand.png" type="image/x-icon">
+</head>
+<body>
+    <!-- Loading Spinner -->
+    <div id="loading-spinner" style="display: none;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container">
+            <a class="navbar-brand" href="/featured">
+                <img src="../static/images/brand.png" alt="ChronoLuxe Logo" style="height: 60px; width: auto;">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/featured">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Shop</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Accounts
+                        </a>
+                        <ul class="dropdown-menu">
+                            <?php if ($currentUser): ?>
+                                <li><a class="dropdown-item" href="/sign-up">Create Account</a></li>
+                                <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                                <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#">Wishlist</a></li>
+                            <?php else: ?>
+                                <li><a class="dropdown-item" href="/sign-up">Create Account</a></li>
+                                <li><a class="dropdown-item" href="/login">Login</a></li>
+                            <?php endif; ?>
+                        </ul>
+                    </li>
+                    <?php if ($currentUser): ?>
+                        <li class="nav-item">
+                            <?php $latestOrder = $currentUser->getLatestOrder(); ?>
+                            <?php if ($latestOrder): ?>
+                                <a class="nav-link" href="/order-status/<?= $latestOrder->id ?>">Order Status</a>
+                            <?php else: ?>
+                                <a class="nav-link" href="#">No Orders</a>
+                            <?php endif; ?>
+                        </li>
+                    <?php endif; ?>
+                </ul>
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    <?php if (!empty($_SESSION['flash_messages'])): ?>
+        <div class="alert-container">
+            <?php foreach ($_SESSION['flash_messages'] as $category => $messages): ?>
+                <?php foreach ($messages as $message): ?>
+                    <div class="alert alert-<?= $category ?> alert-dismissible fade show" role="alert">
+                        <?= $message ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <?php endforeach; ?>
+            <?php endforeach; ?>
+        </div>
+        <?php unset($_SESSION['flash_messages']); ?>
+    <?php endif; ?>
+
+    <!-- Main Content -->
+    <?= $content ?? '' ?>
+
+    <!-- Footer -->
+    <footer class="text-center text-lg-start text-white" style="background-color: #3e4551">
+        <div class="container p-4 pb-0">
+            <section class="">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
+                        <h5 class="text-uppercase">ChronoLuxe</h5>
+                        <p>Explore the finest craftsmanship of Rolex watches...</p>
+                    </div>
+                    <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
+                        <h5 class="text-uppercase">Account Management</h5>
+                        <ul class="list-unstyled mb-0">
+                            <li><a href="/profile" class="text-white">Edit Account</a></li>
+                            <li><a href="/sign-up" class="text-white">Create Account</a></li>
+                            <li><a href="#!" class="text-white">Delete Account</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
+                        <h5 class="text-uppercase">Shop</h5>
+                        <ul class="list-unstyled mb-0">
+                            <li><a href="#!" class="text-white">Wishlist</a></li>
+                            <li><a href="/cart" class="text-white">Cart</a></li>
+                            <li><a href="#!" class="text-white">Orders</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
+                        <h5 class="text-uppercase">Stay Connected</h5>
+                        <ul class="list-unstyled mb-0">
+                            <li><a href="#!" class="text-white">Facebook</a></li>
+                            <li><a href="#!" class="text-white">Instagram</a></li>
+                            <li><a href="#!" class="text-white">Twitter</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
+                        <h5 class="text-uppercase">Contact us</h5>
+                        <ul class="list-unstyled mb-0">
+                            <li><a href="#!" class="text-white">Email: support@chronoluxe.com</a></li>
+                            <li><a href="#!" class="text-white">Phone: +1 (800) 123-4567</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="mb-4" />
+
+            <section class="text-center">
+                <p>Register for free</p>
+                <a href="/sign-up" class="btn btn-outline-light btn-rounded">Sign up!</a>
+            </section>
+
+            <hr class="mb-4" />
+
+            <section class="mb-4 text-center">
+                <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"><i class="fab fa-facebook-f"></i></a>
+                <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"><i class="fab fa-twitter"></i></a>
+                <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"><i class="fab fa-google"></i></a>
+                <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"><i class="fab fa-instagram"></i></a>
+                <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"><i class="fab fa-linkedin-in"></i></a>
+                <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"><i class="fab fa-github"></i></a>
+            </section>
+        </div>
+
+        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
+            © 2024 Copyright:
+            <a class="text-white" href="#">ChronoLuxe</a>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../static/js/bootstrap.bundle.min.js"></script>
+    <script src="../static/js/mdb.min.js"></script>
+</body>
+</html>
